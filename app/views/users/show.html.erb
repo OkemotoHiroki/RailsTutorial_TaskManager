@@ -1,0 +1,5 @@
+<% if @user == current_user %>
+    <h1><%= @user.name %></h1>
+    <p><%= @user.email %></p>
+    <%= link_to "ユーザー情報の編集", edit_user_path(@user) %>
+<% end %>
