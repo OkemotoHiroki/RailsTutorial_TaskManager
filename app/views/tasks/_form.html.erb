@@ -1,8 +1,9 @@
+<div class="p-4">
 <%= form_with(model: @task) do |form| %>
     <% if @task.errors.any? %>
-        <div id="error_explanation">
-        <h2><%= pluralize(@task.errors.count, "error") %> prohibited this task from being saved:</h2>
-        <ul>
+        <div id="error_explanation" class="bg-red-100 border border-red-400 text-red-700 p-4 rounded mb-4">
+        <h2 class="font-bold">入力に問題があります：</h2>
+        <ul class="list-disc list-inside">
             <% @task.errors.full_messages.each do |message| %>
             <li><%= message %></li>
             <% end %>
@@ -10,25 +11,53 @@
         </div>
     <% end %>
 
-    <div class="field">
-        <%= form.label :name, "タイトル" %>
-        <%= form.text_field :name, id: :task_name %>
+    <div class="field flex flex-col mb-4">
+        <%= form.label :name, "タイトル：", class: "block text-sm font-medium text-gray-700" %>
+        <%= form.text_field :name, id: :task_name, class: "mt-1 block border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" %>
+    </div>
+
+    <div class="field flex flex-col mb-4">
+        <%= form.label :detail, "内容：", class: "block text-sm font-medium text-gray-700" %>
+        <%= form.text_area :detail, id: :task_detail, class: "mt-1 block  border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" %>
     </div>
 
     <div class="field">
-        <%= form.label :detail, "内容" %>
-        <%= form.text_area :detail, id: :task_detail %>
+        <%= form.label :start_datetime, "開始日時：",class: "block" %>
+        <%= form.datetime_select :start_datetime, id: :task_start_datetime, class: "mt-1 block  border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" %>
+    </div>
+    <div class="field">
+        <%= form.label :end_datetime, "終了日時：", class: "block" %>
+        <%= form.datetime_select :end_datetime, id: :task_end_datetime, class: "mt-1 block  border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" %>
     </div>
 
-    <div class="field">
-        <%= form.label :start_datetime, "開始日時" %>
-        <%= form.datetime_select :start_datetime, id: :task_start_datetime %>
+    <div data-controller="file-drop"
+        data-action="dragover->file-drop#dragover dragleave->file-drop#dragleave drop->file-drop#drop">
+        <%= form.label :images, "画像", class: "block" %>
+        <label for="task_images" class="mt-1 block border border-gray-300 rounded-md shadow-sm p-4 text-center cursor-pointer hover:bg-gray-50" >
+            <span class="text-sm text-gray-500">ファイルを選択</span>
+            <%= form.file_field :images, multiple: true, direct_upload: true ,accept:"image/*", class: "hidden",data:{file_drop_target:"input" ,action:"change->file-drop#previewFiles"} %>
+            <div class="mt-2 text-sm text-gray-500">ドラッグ＆ドロップで画像を追加できます</div>
+        </label>
+        <div data-file-drop-target="preview">
+        </div>
+            <% if @task.images.attached? %>
+            <div class="mt-4 grid grid-cols-2 gap-4">
+                <% @task.images.each do |image| %>
+                <div class="relative">
+                    <%= image_tag image, style: "max-width: 100%; max-height: 150px;", class: "rounded" %>
+                    <button type="button" data-action="click->file-drop#removeImage" data-file-id="<%= image.id %>" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-75 hover:opacity-100">
+                        &times;
+                    </button>
+                </div>
+                <% end %>
+            </div>
+            <% end %>
     </div>
-    <div class="field">
-        <%= form.label :end_datetime, "終了日時" %>
-        <%= form.datetime_select :end_datetime, id: :task_end_datetime %>
-    </div>
-    <div class="actions">
-        <%= form.submit %>
+
+
+    <div class="actions flex justify-end">
+        <%= form.submit "保存",class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md" %>
+        <%= link_to "キャンセル", @task, class: "text-gray-500 hover:text-gray-700 py-2 px-4 rounded-md" %>
     </div>
 <%end%>
+</div>

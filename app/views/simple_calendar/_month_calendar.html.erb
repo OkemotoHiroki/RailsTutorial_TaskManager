@@ -1,0 +1,33 @@
+<div class="simple-calendar">
+  <div class="calendar-heading flex items-baseline gap-4">
+    <time datetime="<%= start_date.strftime('%Y-%m') %>" class="calendar-title text-3xl"><%= start_date.strftime("%Y年%-m月") %></time>
+    <nav>
+      <%= link_to t('simple_calendar.today', default: '今日'), calendar.url_for_today_view,class: "text-xl text-blue-500 rounded-full hover:bg-gray-100 transition-colors" %>
+      <%= link_to t('simple_calendar.previous', default: '＜'), calendar.url_for_previous_view, class: "text-xl text-blue-500 rounded-full hover:bg-gray-100 transition-colors" %>
+      <%= link_to t('simple_calendar.next', default: '＞'), calendar.url_for_next_view , class: "text-xl text-blue-500 rounded-full hover:bg-gray-100 transition-colors"%>
+    </nav>
+
+  </div>
+
+  <table class="border-collapse border">
+    <thead>
+      <tr>
+        <% date_range.slice(0, 7).each do |day| %>
+          <th class="border"><%= t('date.abbr_day_names')[day.wday] %></th>
+        <% end %>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% date_range.each_slice(7) do |week| %>
+        <tr>
+          <% week.each do |day| %>
+            <%= content_tag :td, class: "#{calendar.td_classes_for(day)} border h-28 w-32" do %>
+              <% instance_exec(day, calendar.sorted_events_for(day), &passed_block) %>
+            <% end %>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

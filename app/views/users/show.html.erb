@@ -1,5 +1,12 @@
+
 <% if @user == current_user %>
-    <h1><%= @user.name %></h1>
-    <p><%= @user.email %></p>
-    <%= link_to "ユーザー情報の編集", edit_user_path(@user) %>
+    <h1 class="text-2xl font-bold mb-4">ユーザー情報</h1>
+    <div class="mb-4">
+        <div>ユーザー名：</div>
+        <%= @user.name %>
+        </div>
+    <div class="mb-4">
+    <p class="text-gray-600 mb-4"><%= @user.email %></p>
+    </div>
+    <%= link_to "ユーザー情報の編集", edit_user_path(@user), class: "text-blue-500 hover:text-blue-700" %>
 <% end %>

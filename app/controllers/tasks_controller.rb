@@ -26,7 +26,18 @@ class TasksController < ApplicationController
 
   def update
     @task = current_user.tasks.find(params[:id])
-    if @task.update(task_params)
+
+    if params[:remove_image_ids].present?
+      params[:remove_image_ids].each do |id|
+        @task.images.find(id).purge
+      end
+    end
+
+    if params[:task][:images].present?
+      @task.images.attach(params[:task][:images])
+    end
+
+    if @task.update(task_params.except(:images))
       redirect_to task_path(@task), notice: "タスクが更新されました。"
     else
       render :edit, status: :unprocessable_entity

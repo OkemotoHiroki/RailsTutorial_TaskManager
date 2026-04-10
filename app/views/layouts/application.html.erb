@@ -23,8 +23,10 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <header>
+  <body class="">
+    <header class="bg-gray-800 text-white p-4 flex space-x-4">
+      <div class="text-xl font-bold">  タスク管理アプリ</div>
+      <div class="flex space-x-4 ml-auto">
       <% if current_user %>
         <%= button_to "ログアウト", logout_path, method: :delete ,data:{turbo:false}%>
         <%= link_to "ユーザー情報", user_path(current_user) %>
@@ -32,7 +34,10 @@
       <% else %>
         <%= link_to "ログイン", login_path %>
       <% end %>
+      </div>
     </header>
-    <%= yield %>
+    <main class="mx-auto max-w-4xl p-4">
+      <%= yield %>
+    </main>
   </body>
 </html>

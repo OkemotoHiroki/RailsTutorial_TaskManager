@@ -66,3 +66,7 @@ group :test do
 end
 
 gem "pg"
+
+gem "tailwindcss-rails", "~> 4.4"
+
+gem "simple_calendar"

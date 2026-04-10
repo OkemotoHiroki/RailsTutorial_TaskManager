@@ -1,21 +1,46 @@
-<h1>タスク一覧</h1>
+<h1 class="text-2xl font-bold mb-4">タスク一覧</h1>
 
-<%= link_to "タスクを追加", new_task_path, class: "btn btn-primary" %>
+<%= link_to "タスクを追加", new_task_path, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md" %>
 
-<table>
-    <thead>
-        <tr>
+
+<div class="mt-6">
+<%= month_calendar events: @tasks, attribute: :start_datetime, start_attribute: :start_datetime, end_attribute: :end_datetime do |date, tasks| %>
+<div class="h-full w-full">
+    <div class="top-1 left-1 font-bold">
+        <%= date.day %>
+    </div>
+    <% visible_tasks, remaining_tasks =limit_tasks(tasks, limit: 2) %>
+    <% visible_tasks.each do |task| %>
+        <div class=" text-sm px-1 mt-1 truncate max-w-32">
+        <%= link_to task.name, task_path(task) %>
+        </div>
+    <% end %>
+    <% if remaining_tasks > 1 %>
+        <div class="text-xs text-gray-500 mt-1">
+        他＋<%= remaining_tasks %> 件
+        </div>
+    <%elsif remaining_tasks == 1 %>
+        <% extra_task = tasks.last %>
+        <div class=" text-sm px-1 mt-1 truncate max-w-32">
+            <%= link_to extra_task.name, task_path(extra_task) %>
+        </div>
+    <% end %>
+    <%end%>
+</div>
+<table class="min-w-full mt-4 bg-white border border-gray-200">
+    <thead class="bg-gray-100">
+        <tr class="text-left">
             <th>タイトル</th>
             <th>開始日</th>
             <th>終了日</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="divide-y divide-gray-200">
         <% @tasks.each do |task| %>
-        <tr>
-            <td><%= link_to task.name, task_path(task) %></td>
-            <td><%= task.start_datetime.strftime("%Y-%m-%d %H:%M") %></td>
-            <td><%= task.end_datetime.strftime("%Y-%m-%d %H:%M") %></td>
+        <tr class="hover:bg-gray-50">
+            <td class="max-w-xs truncate"><%= link_to task.name, task_path(task) %></td>
+            <td><%= link_to task.start_datetime.strftime("%Y-%m-%d %H:%M"), task_path(task) %></td>
+            <td><%= link_to task.end_datetime.strftime("%Y-%m-%d %H:%M"), task_path(task) %></td>
         </tr>
         <% end %>
     </tbody>  
