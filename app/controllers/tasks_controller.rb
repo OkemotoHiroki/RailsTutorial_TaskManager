@@ -27,8 +27,9 @@ class TasksController < ApplicationController
   def update
     @task = current_user.tasks.find(params[:id])
 
-    if params[:remove_image_ids].present?
-      params[:remove_image_ids].each do |id|
+
+    if params[:task][:images_to_delete].present?
+      params[:task][:images_to_delete].split(",").each do |id|
         @task.images.find(id).purge
       end
     end
