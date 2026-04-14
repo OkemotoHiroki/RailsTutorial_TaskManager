@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_09_072904) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_14_004835) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,10 +42,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_09_072904) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "google_calendar_integrations", force: :cascade do |t|
+    t.text "access_token"
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.datetime "expires_at"
+    t.string "provider"
+    t.text "refresh_token"
+    t.string "scope"
+    t.boolean "sync_enabled"
+    t.string "uid"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_google_calendar_integrations_on_user_id"
+  end
+
   create_table "tasks", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "detail"
     t.datetime "end_datetime"
+    t.string "event_id"
     t.string "name"
     t.datetime "start_datetime"
     t.datetime "updated_at", null: false
@@ -58,10 +74,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_09_072904) do
     t.string "email"
     t.string "name"
     t.string "password_digest"
+    t.string "provider"
+    t.string "uid"
     t.datetime "updated_at", null: false
+    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "google_calendar_integrations", "users"
   add_foreign_key "tasks", "users"
 end

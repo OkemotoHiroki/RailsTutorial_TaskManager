@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  resources :users, only: [ :new, :create, :show, :edit, :update ]
+  resources :users
   get "signup", to: "users#new"
   post "signup", to: "users#create"
 
@@ -22,4 +22,18 @@ Rails.application.routes.draw do
   root "sessions#new"
 
   resources :tasks
+
+  get "/auth/google/login", to: "sessions#google_login", as: :google_login
+  get "/auth/google/login/callback", to: "sessions#google_callback"
+
+  get "/auth/google/calendar", to: "google_calendar_integrations#connect"
+  get "/auth/google/calendar/callback", to: "google_calendar_integrations#callback"
+
+  resource :google_calendar_integration, only: [ :show, :update, :destroy ]
+
+  resources :google_calendar_integration do
+    member do
+      patch "toggle_sync", to: "google_calendar_integrations#toggle_sync"
+    end
+  end
 end

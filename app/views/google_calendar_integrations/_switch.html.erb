@@ -1,0 +1,12 @@
+<p>Googleカレンダー連携済み</p>
+
+<div class="flex items-center mb-4 hover:bg-gray-200 p-2 rounded-md">
+同期：
+<%= button_to current_user.google_calendar_integration.sync_enabled ? "🟢ON" : "🔴OFF",
+              toggle_sync_google_calendar_integration_path(current_user.google_calendar_integration),
+              method: :patch %>
+</div>
+
+<div>
+<%= link_to "連携解除" , google_calendar_integration_path(current_user.google_calendar_integration), data:{turbo_method: :delete, turbo_confirm:"本当に連携を解除しますか？"},class: "text-red-500 hover:text-red-700" %>
+</div>

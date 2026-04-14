@@ -72,3 +72,8 @@ gem "tailwindcss-rails", "~> 4.4"
 gem "simple_calendar"
 
 gem "activestorage-validator"
+
+gem "oauth2"
+gem "dotenv-rails"
+
+gem "google-apis-calendar_v3"

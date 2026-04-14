@@ -8,5 +8,10 @@
     <div class="mb-4">
     <p class="text-gray-600 mb-4"><%= @user.email %></p>
     </div>
+    
+    <%= render "google_calendar_integrations/switch", integration: @user.google_calendar_integration if @user.google_calendar_integration %>
+    <%= render "google_calendar_integrations/connect_button" if @user.google_calendar_integration.nil? %>
+
     <%= link_to "ユーザー情報の編集", edit_user_path(@user), class: "text-blue-500 hover:text-blue-700" %>
+    <%= link_to "ユーザーの削除", user_path(@user),data:{turbo_method: :delete, turbo_confirm:"本当に削除しますか？"} , class: "text-red-500 hover:text-red-700" %>
 <% end %>

@@ -10,6 +10,10 @@ class TasksController < ApplicationController
   def create
     @task = current_user.tasks.new(task_params)
     if @task.save
+      integration = current_user.google_calendar_integration
+      if integration&.sync_enabled
+        GoogleCalendarService.new(current_user.google_calendar_integration).add_event_to_google_calendar(@task)
+      end
       redirect_to tasks_path, notice: "タスクが作成されました。"
     else
       render :new, status: :unprocessable_entity
@@ -39,6 +43,10 @@ class TasksController < ApplicationController
     end
 
     if @task.update(task_params.except(:images))
+      integration = current_user.google_calendar_integration
+      if integration&.sync_enabled
+        GoogleCalendarService.new(current_user.google_calendar_integration).update_event_to_google_calendar(@task)
+      end
       redirect_to task_path(@task), notice: "タスクが更新されました。"
     else
       render :edit, status: :unprocessable_entity
@@ -47,6 +55,10 @@ class TasksController < ApplicationController
 
   def destroy
     @task = current_user.tasks.find(params[:id])
+    integration = current_user.google_calendar_integration
+    if integration&.sync_enabled && @task.event_id.present?
+      GoogleCalendarService.new(current_user.google_calendar_integration).delete_event_to_google_calendar(@task)
+    end
     @task.destroy
     redirect_to tasks_path, notice: "タスクが削除されました。"
   end
