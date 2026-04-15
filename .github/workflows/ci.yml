@@ -106,6 +106,10 @@ jobs:
           RAILS_ENV: test
           # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           # REDIS_URL: redis://localhost:6379/0
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: Task_Manager_test
+          POSTGRES_HOST: postgres
         run: bin/rails db:test:prepare test
 
   system-test:
@@ -151,6 +155,9 @@ jobs:
           RAILS_ENV: test
           # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           # REDIS_URL: redis://localhost:6379/0
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_HOST: postgres
         run: bin/rails db:test:prepare test:system
 
       - name: Keep screenshots from failed system tests
