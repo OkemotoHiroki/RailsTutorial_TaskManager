@@ -76,14 +76,13 @@ jobs:
     #    options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
     services:
       postgres:
-        image: postgres:15
+        image: postgres:16
         ports:
           - 5432:5432
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
+          POSTGRES_PASSWORD: postgres
           POSTGRES_DB: Task_Manager_test
-          POSTGRES_HOST: postgres
         options: >-
           --health-cmd="pg_isready -U postgres"
           --health-interval=10s
@@ -106,10 +105,9 @@ jobs:
           RAILS_ENV: test
           # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           # REDIS_URL: redis://localhost:6379/0
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: Task_Manager_test
-          POSTGRES_HOST: postgres
+          # The hostname used to communicate with the PostgreSQL service container
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/Task_Manager_test
+
         run: bin/rails db:test:prepare test
 
   system-test:
@@ -123,15 +121,13 @@ jobs:
     #    options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
     services:
       postgres:
-        image: postgres:15
+        image: postgres:16
         ports:
           - 5432:5432
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
+          POSTGRES_PASSWORD: postgres
           POSTGRES_DB: Task_Manager_test
-          POSTGRES_HOST: postgres
-
         options: >-
           --health-cmd="pg_isready -U postgres"
           --health-interval=10s
@@ -155,9 +151,7 @@ jobs:
           RAILS_ENV: test
           # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           # REDIS_URL: redis://localhost:6379/0
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
-          POSTGRES_HOST: postgres
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/Task_Manager_test
         run: bin/rails db:test:prepare test:system
 
       - name: Keep screenshots from failed system tests

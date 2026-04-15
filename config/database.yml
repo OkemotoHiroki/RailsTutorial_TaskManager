@@ -10,11 +10,22 @@ default: &default
 development:
   <<: *default
   database: Task_Manager_development
+  url: postgres://Task_Manager@localhost/Task_Manager_development
 
 test:
   <<: *default
   database: Task_Manager_test
+  url: <%= ENV["DATABASE_URL"] %>
 
 production:
   primary:
+    url: <%= ENV["DATABASE_URL"] %>
+
+  cache:
+    url: <%= ENV["DATABASE_URL"] %>
+
+  queue:
+    url: <%= ENV["DATABASE_URL"] %>
+
+  cable:
     url: <%= ENV["DATABASE_URL"] %>
