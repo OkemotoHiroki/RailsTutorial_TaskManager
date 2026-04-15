@@ -29,16 +29,4 @@ test:
 production:
   primary:
     <<: *default
-    password: <%= ENV["TASK_MANAGER_DATABASE_PASSWORD"] %>
-  cache:
-    <<: *default
-    password: <%= ENV["TASK_MANAGER_DATABASE_PASSWORD"] %>
-    migrations_paths: db/cache_migrate
-  queue:
-    <<: *default
-    password: <%= ENV["TASK_MANAGER_DATABASE_PASSWORD"] %>
-    migrations_paths: db/queue_migrate
-  cable:
-    <<: *default
-    password: <%= ENV["TASK_MANAGER_DATABASE_PASSWORD"] %>
-    migrations_paths: db/cable_migrate
+    url: <%= ENV["DATABASE_URL"] %>

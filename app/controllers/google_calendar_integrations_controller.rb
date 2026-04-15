@@ -1,8 +1,4 @@
 class GoogleCalendarIntegrationsController < ApplicationController
-  CLIENT_ID = ENV["GOOGLE_CLIENT_ID"]
-  CLIENT_SECRET = ENV["GOOGLE_CLIENT_SECRET"]
-  REDIRECT_URI = "http://localhost:3000/auth/google/calendar/callback"
-
   def connect
     client = OAuth2::Client.new(
       ENV["GOOGLE_CLIENT_ID"],
@@ -13,7 +9,7 @@ class GoogleCalendarIntegrationsController < ApplicationController
     )
 
     redirect_to client.auth_code.authorize_url(
-      redirect_uri: REDIRECT_URI,
+      redirect_uri: auth_google_calendar_callback_url,
       scope: "https://www.googleapis.com/auth/calendar",
       access_type: "offline",
       prompt: "consent"
@@ -31,7 +27,7 @@ class GoogleCalendarIntegrationsController < ApplicationController
 
     token = client.auth_code.get_token(
       params[:code],
-      redirect_uri: REDIRECT_URI
+      redirect_uri: auth_google_calendar_callback_url
     )
 
     if current_user.google_calendar_integration

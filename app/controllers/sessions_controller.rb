@@ -29,7 +29,7 @@ class SessionsController < ApplicationController
       token_url: "/o/oauth2/token"
     )
     redirect_to client.auth_code.authorize_url(
-      redirect_uri: "http://localhost:3000/auth/google/login/callback",
+      redirect_uri: auth_google_login_callback_url,
       scope: "email profile",
       prompt: "consent"
     ), allow_other_host: true
@@ -43,7 +43,7 @@ class SessionsController < ApplicationController
       authorize_url: "/o/oauth2/auth",
       token_url: "/o/oauth2/token"
     )
-    token = client.auth_code.get_token(params[:code], redirect_uri: "http://localhost:3000/auth/google/login/callback")
+    token = client.auth_code.get_token(params[:code], redirect_uri: auth_google_login_callback_url)
     user_info = JSON.parse(token.get("https://www.googleapis.com/oauth2/v2/userinfo").body)
 
     user = User.find_or_create_by(provider: "google", uid: user_info["id"]) do |u|
