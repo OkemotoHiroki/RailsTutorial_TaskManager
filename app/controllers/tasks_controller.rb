@@ -10,6 +10,14 @@ class TasksController < ApplicationController
   def create
     @task = current_user.tasks.new(task_params)
     if @task.save
+      images = Array(params.dig(:task, :images)).reject(&:blank?)
+      images.each do |image|
+        @task.images.create!(
+          data: image.read,
+          content_type: image.content_type,
+          filename: image.original_filename
+        )
+      end
       integration = current_user.google_calendar_integration
       if integration&.sync_enabled
         GoogleCalendarService.new(current_user.google_calendar_integration).add_event_to_google_calendar(@task)
@@ -32,17 +40,24 @@ class TasksController < ApplicationController
     @task = current_user.tasks.find(params[:id])
 
 
-    if params[:task][:images_to_delete].present?
+    if params.dig(:task, :images_to_delete).present?
       params[:task][:images_to_delete].split(",").each do |id|
-        @task.images.find(id).purge
+        @task.images.find(id)&.destroy
       end
     end
 
-    if params[:task][:images].present?
-      @task.images.attach(params[:task][:images])
+    if params.dig(:task, :images).present?
+      images = Array(params.dig(:task, :images)).reject(&:blank?)
+      images.each do |image|
+        @task.images.create!(
+          data: image.read,
+          content_type: image.content_type,
+          filename: image.original_filename
+        )
+      end
     end
 
-    if @task.update(task_params.except(:images))
+    if @task.update(task_params)
       integration = current_user.google_calendar_integration
       if integration&.sync_enabled
         GoogleCalendarService.new(current_user.google_calendar_integration).update_event_to_google_calendar(@task)
@@ -63,8 +78,18 @@ class TasksController < ApplicationController
     redirect_to tasks_path, notice: "タスクが削除されました。"
   end
 
+  def image
+    @image = Image.find(params[:id])
+    if @image.task.user_id != current_user.id
+      head :forbidden
+      return
+    end
+    send_data @image.data, type: @image.content_type, filename: @image.filename, disposition: "inline"
+  end
+
+
   private
   def task_params
-    params.require(:task).permit(:name, :detail, :start_datetime, :end_datetime, images: [])
+    params.require(:task).permit(:name, :detail, :start_datetime, :end_datetime)
   end
 end

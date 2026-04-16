@@ -40,7 +40,7 @@ export default class extends Controller {
 
     reader.onload = (e) => {
       const imageBox = document.createElement("div")
-      imageBox.classList.add("inline-flex", "mx-1", "mb-2")
+      imageBox.classList.add("inline-flex", "mx-1", "mb-2", "relative")
 
       const img = document.createElement("img")
       img.src = e.target.result

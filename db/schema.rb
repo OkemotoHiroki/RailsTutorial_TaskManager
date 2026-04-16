@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_14_004835) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_16_032254) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -57,6 +57,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_14_004835) do
     t.index ["user_id"], name: "index_google_calendar_integrations_on_user_id"
   end
 
+  create_table "images", force: :cascade do |t|
+    t.string "content_type"
+    t.datetime "created_at", null: false
+    t.binary "data"
+    t.string "filename"
+    t.bigint "task_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["task_id"], name: "index_images_on_task_id"
+  end
+
   create_table "tasks", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "detail"
@@ -83,5 +93,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_14_004835) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "google_calendar_integrations", "users"
+  add_foreign_key "images", "tasks"
   add_foreign_key "tasks", "users"
 end

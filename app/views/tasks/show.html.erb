@@ -10,10 +10,10 @@
 <p class="mt-4">
     <%= @task.detail %>
 </p>
-<% if @task.images.attached? %>
+<% if @task.images.any? %>
   <div class="flex flex-wrap gap-4 mt-4">
     <% @task.images.each do |image| %>
-      <%= image_tag image, style: "max-width: 100%;" ,class: "rounded" %>
+      <%= image_tag image_task_path(image), style: "max-width: 100%;" ,class: "rounded" %>
     <% end %>
   </div>
 <% end %>

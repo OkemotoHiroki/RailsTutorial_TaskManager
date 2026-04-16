@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   root "sessions#new"
 
   resources :tasks
+  get "tasks/:id/images", to: "tasks#image", as: "image_task"
 
   get "/auth/google/login", to: "sessions#google_login", as: :google_login
   get "/auth/google/login/callback", to: "sessions#google_callback"

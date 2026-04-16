@@ -35,19 +35,17 @@
         <%= form.label :images, "画像", class: "block" %>
         <label for="task_images" class="mt-1 block border border-gray-300 rounded-md shadow-sm p-4 text-center cursor-pointer hover:bg-gray-50" >
             <span class="text-sm text-gray-500">ファイルを選択</span>
-            <%= form.file_field :images, multiple: true, direct_upload: true ,accept:"image/*", class: "hidden",data:{file_drop_target:"input" ,action:"change->file-drop#previewFiles"} %>
+            <%= form.file_field :images, multiple: true,accept:"image/*", class: "hidden",data:{file_drop_target:"input" ,action:"change->file-drop#previewFiles"} %>
             <div class="mt-2 text-sm text-gray-500">ドラッグ＆ドロップで画像を追加できます</div>
         </label>
             <div class="mt-4 flex flex-wrap gap-1" data-file-drop-target="preview">
-                <% if @task.images.attached? %>
-                    <% @task.images.each do |image| %>
+                <% @task.images.each do |image| %>
                         <div class="inline-flex mx-1 mb-2 relative" data-image-id="<%= image.id %>" data-existing="true">
-                            <%= image_tag image,width:100 ,class: "rounded" %>
+                        <%= image_tag image_task_path(image),width:100 ,class: "rounded" %>
                             <button type="button" class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center hover:bg-red-700" data-action="click->file-drop#removeExistingImage">
                             ×
                             </button>
                         </div>
-                    <% end %>
                 <% end %>
             </div>
             <%= form.hidden_field :images_to_delete, value: "", data: { file_drop_target: "deleteIds" } %>
