@@ -84,7 +84,14 @@ class TasksController < ApplicationController
       head :forbidden
       return
     end
-    send_data @image.data, type: @image.content_type, filename: @image.filename, disposition: "inline"
+    # 申告された content_type のまま inline で返すと、HTML や SVG を画像として
+    # 投稿された場合にアプリのオリジン上でスクリプトが実行される。許可した画像
+    # 形式以外はダウンロード扱いにし、MIME スニッフィングも禁止する。
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    send_data @image.data,
+              type: @image.safe_content_type,
+              filename: @image.filename,
+              disposition: @image.inline_safe? ? "inline" : "attachment"
   end
 
 
